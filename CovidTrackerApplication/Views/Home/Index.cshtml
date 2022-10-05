@@ -1,92 +1,71 @@
-﻿@model IEnumerable<CovidTrackerApp.Models.DailyDataRow>
+﻿@model IEnumerable<CovidTrackerApplication.Models.DailyDataRow>
 
 @{
-    ViewData["Title"] = "Covid Data";
+    ViewBag.Title = "Covid Data";
 }
 
 @{
     int id = 1;
 }
-
-<div class="form-horizontal">
-    <hr />
-    <div class="form-group">
-
-        <table class="table table-responsive" id="dataTable">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Id)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.date)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.state)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.positive)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.negative)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.pending)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.totalTestResults)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.hospitalizedCurrently)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.hospitalizedCumulative)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.death)
-                </th>
-            </tr>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @{
-                            item.Id = id;
-                        }
-                        @Html.DisplayFor(modelItem => item.Id)
-                        @{
-                            id++;
-                        }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.date)
-
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.state)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.positive)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.negative)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.pending)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.totalTestResults)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.hospitalizedCurrently)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.hospitalizedCumulative)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.death)
-                    </td>
-                </tr>
+<script type="text/javascript">
+    function Load() {
+        $.ajax({
+            type: "POST",
+            url: "/Home/Index",
+            dataType: "json",
+            success: fuction(result) {
+            var flex = wijmo.Control.getControl("#fg"),
+            cv = flex.collectionView;
+            try {
+                cv._isFillingData = true;
+                cv.deferUpdate(function () {
+                    cv.sourceCollection.clear();
+                    reslut.forEach(funciton(item) {
+                        item.Start = parseDate(item.Start);
+                        item.End = parseDate(item.End);
+                        cv.sourceCollection.push(item);
+                    });
+                })
+            } finally {
+                cv._isFillingData = false;
             }
-        </table>
+        },
+            error: function (err) {
+
+            }
+        });
+    }
+</script>
+
+<div class="row">
+    
+    <div class="col-12">
+
+        @(Html.Kendo().Grid<CovidTrackerApplication.Models.DailyDataRow>()
+            .Name("grid")
+            .Columns(columns =>
+            {
+                columns.Bound(p => p.Id).Filterable(false);
+                columns.Bound(p => p.date).Filterable(true);
+                columns.Bound(p => p.state).Filterable(true);
+                columns.Bound(p => p.positive);
+                columns.Bound(p => p.negative);
+                columns.Bound(p => p.pending);
+                columns.Bound(p => p.totalTestResults);
+                columns.Bound(p => p.hospitalizedCurrently);
+                columns.Bound(p => p.hospitalizedCumulative);
+                columns.Bound(p => p.death);
+            })
+            .Pageable()
+            .Sortable()
+            .Scrollable()
+            .Filterable()
+            .HtmlAttributes(new { style = "height:550px;" })
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(20)
+                .Read(read => read.Action("Data_Read", "Grid"))
+            )
+        )
     </div>
 </div>

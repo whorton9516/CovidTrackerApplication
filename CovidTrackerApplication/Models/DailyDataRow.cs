@@ -4,7 +4,7 @@ using System.Web;
 using System.Collections.Generic;
 
 
-namespace CovidTrackerApp.Models
+namespace CovidTrackerApplication.Models
 {
     public class DailyDataRow
     {
@@ -37,7 +37,6 @@ namespace CovidTrackerApp.Models
 
         // Total death count
         public int? death { get; set; }
-
 
         DailyDataRow()
         {
