@@ -4,7 +4,6 @@
     ViewBag.Title = "Covid Data";
 }
 
-@{ var id = 1; }
 
 <head>
     <title></title>
@@ -16,6 +15,81 @@
 
     <script src="js/kendo.all.min.js"></script>
 </head>
+
+<div>
+    <table class="table table-responsive" style="width:400px">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.state)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.positive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.negative)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.pending)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.totalTestResults)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.hospitalizedCurrently)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.hospitalizedCumulative)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.death)
+            </th>
+
+        </tr>
+        @{ var id = 1; }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @{ item.Id = id++; }
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.state)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.positive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.negative)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.pending)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.totalTestResults)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.hospitalizedCurrently)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.hospitalizedCumulative)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.death)
+                </td>
+            </tr>
+        }
+    </table>
+</div>
 
 <div>
     @(Html.Kendo().Grid<CovidTrackerApplication.Models.DailyDataRow>()
