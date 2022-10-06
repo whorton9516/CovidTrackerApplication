@@ -29,15 +29,9 @@ namespace CovidTrackerApp.Controllers
             _logger = logger;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
-        }
-
-        public async Task<ActionResult> Data_Read()
-        {
-
-            List<DailyDataRow> data = new List<DailyDataRow>();
+            IEnumerable<DailyDataRow> data = new List<DailyDataRow>();
 
             using (var httpClient = new HttpClient())
             {
@@ -66,5 +60,6 @@ namespace CovidTrackerApp.Controllers
                 return View(data);
             }
         }
+
     }
 }

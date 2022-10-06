@@ -9,10 +9,10 @@ namespace CovidTrackerApplication.Models
     public class DailyDataRow
     {
         // Id of the dataset
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         // Date of the dataset
-        public string date { get; set; }
+        public int date { get; set; }
 
         // State Abbreviation
         public string state { get; set; }
@@ -43,8 +43,9 @@ namespace CovidTrackerApplication.Models
             positive = negative = pending =
                 totalTestResults = hospitalizedCurrently =
                 hospitalizedCumulative = death = 0;
-            date = "20200101";
+            date = 20200101;
             state = "ZZ";
+            Id = date + (int)char.GetNumericValue(state[0]) + (int)char.GetNumericValue(state[1]);
         }
     }
 }

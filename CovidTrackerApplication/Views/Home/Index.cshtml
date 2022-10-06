@@ -3,136 +3,107 @@
 @{
     ViewBag.Title = "Covid Data";
 }
+<div id="grid">
+    <script>
 
-<script>
-    $(document).ready(function () {
-        var crudServiceBaseUrl = "https://api.covidtracking.com",
-            dataSource = new kendo.data.DataSource({
-                transport: {
-                    read: {
-                        url: crudServiceBaseUrl + "https://api.covidtracking.com/v1/states/daily.json",
-                        dataType: "json"
-                    }
-                },
-                batch: true,
-                pageSize: 20,
-                autoSync: true,
-                schema: {
-                    model: {
-                        id: "date",
-                        fields: {
-                            date: { type: "string", editable: false, nullable: true },
-                            state: { type: "string", editable: false },
-                            positive: { type: "int", editable: false },
-                            negative: { type: "number", editable: false },
-                            pending: { type: "number" },
-                            totalTestResults: { type: "number" },
-                            hospitalizedCurrently: { type: "number" },
-                            hospitalizedCumulative: { type: "number" },
-                            death: { type: "number" }
+
+        $(document).ready(function () {
+            var crudServiceBaseUrl = "https://api.covidtracking.com",
+                dataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: crudServiceBaseUrl + "https://api.covidtracking.com/v1/states/daily.json",
+                            dataType: "json"
+                        }
+                    },
+                    batch: true,
+                    pageSize: 20,
+                    autoSync: true,
+                    schema: {
+                        model: {
+                            id: "date",
+                            fields: {
+                                date: { type: "string", editable: false, nullable: true },
+                                state: { type: "string", editable: false },
+                                positive: { type: "int", editable: false },
+                                negative: { type: "number", editable: false },
+                                pending: { type: "number" },
+                                totalTestResults: { type: "number" },
+                                hospitalizedCurrently: { type: "number" },
+                                hospitalizedCumulative: { type: "number" },
+                                death: { type: "number" }
+                            }
                         }
                     }
-                }
+                });
+
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
+                columnMenu: {
+                    filterable: false
+                },
+                height: 680,
+                editable: "incell",
+                pageable: true,
+                sortable: true,
+                navigatable: true,
+                resizable: true,
+                reorderable: true,
+                groupable: true,
+                filterable: true,
+                dataBound: onDataBound,
+                toolbar: ["excel", "pdf", "search"],
+                columns: [{
+                    field: "date",
+                    title: "Date",
+                    width: 150
+                }, {
+                    field: "state",
+                    title: "State",
+                    width: 150
+                }, {
+                    field: "positive",
+                    title: "Positive",
+                    width: 150,
+                }, {
+                    field: "negative",
+                    title: "Negative",
+                    width: 150
+                }, {
+                    field: "pending",
+                    title: "Pending",
+                    width: 150
+                }, {
+                    field: "totalTestResults",
+                    title: "Total Test Results",
+                    width: 150
+                }, {
+                    field: "hospitalizedCurrently",
+                    title: "Currently Hospitalized",
+                    width: 150
+                }, {
+                    field: "hospitalizedCumulative",
+                    title: "Total hospitalized to date",
+                    width: 150,
+                }, {
+                    field: "death",
+                    title: "Total deaths to date",
+                    width: 150
+                }],
             });
-
-        $("#grid").kendoGrid({
-            dataSource: dataSource,
-            columnMenu: {
-                filterable: false
-            },
-            height: 680,
-            editable: "incell",
-            pageable: true,
-            sortable: true,
-            navigatable: true,
-            resizable: true,
-            reorderable: true,
-            groupable: true,
-            filterable: true,
-            dataBound: onDataBound,
-            toolbar: ["excel", "pdf", "search"],
-            columns: [{
-                field: "date",
-                title: "Date",
-                width: 150
-            }, {
-                field: "state",
-                title: "State",
-                width: 150
-            }, {
-                field: "positive",
-                title: "Positive",
-                width: 150,
-            }, {
-                field: "negative",
-                title: "Negative",
-                width: 150
-            }, {
-                field: "pending",
-                title: "Pending",
-                width: 150
-            }, {
-                field: "totalTestResults",
-                title: "Total Test Results",
-                width: 150
-            }, {
-                field: "hospitalizedCurrently",
-                title: "Currently Hospitalized",
-                width: 150
-            }, {
-                field: "hospitalizedCumulative",
-                title: "Total hospitalized to date",
-                width: 150,
-            }, {
-                field: "death",
-                title: "Total deaths to date",
-                width: 150
-            }],
         });
-    });
 
-    function onDataBound(e) {
-        var grid = this;
-        grid.table.find("tr").each(function () {
-            var dataItem = grid.dataItem(this);
-            kendo.bind($(this), dataItem);
-        });
-    }
+        function onDataBound(e) {
+            var grid = this;
+            grid.table.find("tr").each(function () {
+                var dataItem = grid.dataItem(this);
+                kendo.bind($(this), dataItem);
+            });
+        }
 
-    function returnFalse() {
-        return false;
-    }
+        function returnFalse() {
+            return false;
+        }
 
-</script>
-
-@(Html.Kendo().Grid<Kendo.Mvc.Examples.Models.ProductViewModel>()
-      .Name("grid")
-      .Columns(columns =>
-      {
-          columns.Bound(p => p.ProductName);
-          columns.Bound(p => p.UnitPrice).Width(150);
-          columns.Bound(p => p.UnitsInStock).Width(150);
-          columns.Bound(p => p.Discontinued).Width(150);
-          columns.Command(command => { command.Edit(); command.Destroy(); }).Width(200);
-      })
-      .ToolBar(tools =>
-      {
-          tools.Create();
-      })
-      .Sortable()
-      .Pageable()
-      .Filterable()
-      .DataSource(dataSource =>
-          dataSource
-            .WebApi()
-            .Model(model =>
-            {
-                model.Id(p => p.ProductID);
-            })
-            .Events(events => events.Error("error_handler"))
-            .Read(read => read.Url(Url.HttpRouteUrl("DefaultApi", new { controller = "Product" })))
-            .Create(create => create.Url(Url.HttpRouteUrl("DefaultApi", new { controller = "Product" })))
-            .Update(update => update.Url(Url.HttpRouteUrl("DefaultApi", new { controller = "Product", id = "{0}" })))
-            .Destroy(destroy => destroy.Url(Url.HttpRouteUrl("DefaultApi", new { controller = "Product", id = "{0}" })))
-      )
-)
+    </script>
+</div>
