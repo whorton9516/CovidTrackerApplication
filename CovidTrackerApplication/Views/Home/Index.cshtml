@@ -4,39 +4,6 @@
     ViewBag.Title = "Covid Data";
 }
 
-@{
-    int id = 1;
-}
-<script type="text/javascript">
-    function Load() {
-        $.ajax({
-            type: "POST",
-            url: "/Home/Index",
-            dataType: "json",
-            success: fuction(result) {
-            var flex = wijmo.Control.getControl("#fg"),
-            cv = flex.collectionView;
-            try {
-                cv._isFillingData = true;
-                cv.deferUpdate(function () {
-                    cv.sourceCollection.clear();
-                    reslut.forEach(funciton(item) {
-                        item.Start = parseDate(item.Start);
-                        item.End = parseDate(item.End);
-                        cv.sourceCollection.push(item);
-                    });
-                })
-            } finally {
-                cv._isFillingData = false;
-            }
-        },
-            error: function (err) {
-
-            }
-        });
-    }
-</script>
-
 <div class="row">
     
     <div class="col-12">

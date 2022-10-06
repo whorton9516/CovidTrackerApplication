@@ -13,16 +13,59 @@ using System.Web.Mvc;
 using System.Web;
 using Microsoft.Build.Framework;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Mvc;
 using Kendo.Mvc.UI;
+using CovidTrackerApplication.Controllers;
 
 namespace CovidTrackerApp.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ILogger<GridController> _logger;
+        public HomeController() { }
+
+        string Baseurl = "https://api.covidtracking.com/";
+        public HomeController(ILogger<GridController> logger)
+        {
+            _logger = logger;
+        }
+
         public ActionResult Index()
         {
             return View();
+        }
+
+        public async Task<ActionResult> Data_Read()
+        {
+
+            List<DailyDataRow> data = new List<DailyDataRow>();
+            var dataResponse = new object();
+
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri(Baseurl);
+
+                httpClient.DefaultRequestHeaders.Clear();
+
+                //Define request data format  
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
+
+                HttpResponseMessage Res = await httpClient.GetAsync("v1/states/daily.json");
+
+                //Checking the response is successful or not which is sent using HttpClient  
+                if (Res.IsSuccessStatusCode)
+                {
+                    //Storing the response details recieved from web api   
+                    dataResponse = Res.Content.ReadAsStringAsync().Result;
+
+                    //Deserializing the response recieved from web api and storing into the Employee list  
+                    //data = JsonConvert.DeserializeObject<List<DailyDataRow>>(dataResponse);
+                }
+
+                //returning the employee list to view  
+                return Json(dataResponse);
+            }
         }
     }
 }
