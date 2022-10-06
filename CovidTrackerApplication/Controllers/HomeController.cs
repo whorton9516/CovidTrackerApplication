@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using CovidTrackerApplication.Models;
 using Newtonsoft.Json;
-using System.Net;
-using System.Data;
-using System.EnterpriseServices;
 using System.Web.Mvc;
-using System.Web;
-using Microsoft.Build.Framework;
 using Microsoft.Extensions.Logging;
-using Kendo.Mvc.UI;
-using CovidTrackerApplication.Controllers;
+
 
 namespace CovidTrackerApplication.Controllers
 {
@@ -31,6 +24,7 @@ namespace CovidTrackerApplication.Controllers
 
         public async Task<ActionResult> Index()
         {
+            // Creates an IEnumerable list of data for each row
             IEnumerable<DailyDataRow> data = new List<DailyDataRow>();
 
             using (var httpClient = new HttpClient())
@@ -42,8 +36,7 @@ namespace CovidTrackerApplication.Controllers
                 //Define request data format  
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
-
+                //Sending request to find web api REST service resource daily.json using HttpClient  
                 HttpResponseMessage Res = await httpClient.GetAsync("v1/states/daily.json");
 
                 //Checking the response is successful or not which is sent using HttpClient  
@@ -52,11 +45,11 @@ namespace CovidTrackerApplication.Controllers
                     //Storing the response details recieved from web api   
                     var dataResponse = Res.Content.ReadAsStringAsync().Result;
 
-                    //Deserializing the response recieved from web api and storing into the Employee list  
+                    //Deserializing the response recieved from web api and storing into the list  
                     data = JsonConvert.DeserializeObject<List<DailyDataRow>>(dataResponse);
                 }
 
-                //returning the employee list to view  
+                //returning the list to view  
                 return View(data);
             }
         }

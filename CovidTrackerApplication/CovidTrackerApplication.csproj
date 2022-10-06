@@ -275,7 +275,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DailyDataRow.cs" />
-    <Compile Include="Models\OrderViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -812,7 +811,6 @@
     <Content Include="Content\kendo\2022.3.913\fonts\DejaVu\DejaVuSans-BoldOblique.ttf" />
     <Content Include="Content\kendo\2022.3.913\fonts\DejaVu\DejaVuSans-Bold.ttf" />
     <None Include="packages.config" />
-    <Content Include="Images\200.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -3131,9 +3129,6 @@
   <ItemGroup>
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
-    <Content Include="Images\accent.png" />
-    <Content Include="Images\bullet.png" />
-    <Content Include="Images\heroAccent.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

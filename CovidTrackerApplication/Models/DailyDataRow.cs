@@ -1,15 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Web;
-using System.Collections.Generic;
-
+﻿
 
 namespace CovidTrackerApplication.Models
 {
     public class DailyDataRow
     {
         // Id of the dataset
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         // Date of the dataset
         public int date { get; set; }
@@ -40,12 +36,11 @@ namespace CovidTrackerApplication.Models
 
         public DailyDataRow()
         {
-            positive = negative = pending =
+            Id = positive = negative = pending =
                 totalTestResults = hospitalizedCurrently =
                 hospitalizedCumulative = death = 0;
             date = 20200101;
             state = "ZZ";
-            Id = date + (int)char.GetNumericValue(state[0]) + (int)char.GetNumericValue(state[1]);
         }
     }
 }

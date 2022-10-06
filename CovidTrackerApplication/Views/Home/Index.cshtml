@@ -5,17 +5,7 @@
 }
 
 
-<head>
-    <title></title>
-    <link rel="stylesheet" href="styles/kendo.common.min.css" />
-    <link rel="stylesheet" href="styles/kendo.default.min.css" />
-    <link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />
-
-    <script src="js/jquery.min.js"></script>
-
-    <script src="js/kendo.all.min.js"></script>
-</head>
-
+<!-- This table is generates and displays the data but has no sorting or filtering fuctionality -->
 <div>
     <table class="table table-responsive" style="width:400px">
         <tr>
@@ -91,6 +81,8 @@
     </table>
 </div>
 
+
+<!-- This table has sorting and filtering capabilities but I can't get it to display the data -->
 <div>
     @(Html.Kendo().Grid<CovidTrackerApplication.Models.DailyDataRow>()
         .Name("GridTable")
