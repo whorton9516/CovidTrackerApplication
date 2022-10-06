@@ -16,15 +16,15 @@ using Microsoft.Extensions.Logging;
 using Kendo.Mvc.UI;
 using CovidTrackerApplication.Controllers;
 
-namespace CovidTrackerApp.Controllers
+namespace CovidTrackerApplication.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<GridController> _logger;
+        private readonly ILogger<HomeController> _logger;
         public HomeController() { }
 
         string Baseurl = "https://api.covidtracking.com/";
-        public HomeController(ILogger<GridController> logger)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }

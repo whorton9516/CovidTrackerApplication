@@ -3,107 +3,82 @@
 @{
     ViewBag.Title = "Covid Data";
 }
-<div id="grid">
-    <script>
 
+<div class="form-horizontal">
+    <hr />
+    <div class="form-group">
 
-        $(document).ready(function () {
-            var crudServiceBaseUrl = "https://api.covidtracking.com",
-                dataSource = new kendo.data.DataSource({
-                    transport: {
-                        read: {
-                            url: crudServiceBaseUrl + "https://api.covidtracking.com/v1/states/daily.json",
-                            dataType: "json"
-                        }
-                    },
-                    batch: true,
-                    pageSize: 20,
-                    autoSync: true,
-                    schema: {
-                        model: {
-                            id: "date",
-                            fields: {
-                                date: { type: "string", editable: false, nullable: true },
-                                state: { type: "string", editable: false },
-                                positive: { type: "int", editable: false },
-                                negative: { type: "number", editable: false },
-                                pending: { type: "number" },
-                                totalTestResults: { type: "number" },
-                                hospitalizedCurrently: { type: "number" },
-                                hospitalizedCumulative: { type: "number" },
-                                death: { type: "number" }
-                            }
-                        }
-                    }
-                });
+        <table class="table table-responsive" style="width:400px">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.state)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.positive)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.negative)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.pending)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.totalTestResults)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.hospitalizedCurrently)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.hospitalizedCumulative)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.death)
+                </th>
 
-            $("#grid").kendoGrid({
-                dataSource: dataSource,
-                columnMenu: {
-                    filterable: false
-                },
-                height: 680,
-                editable: "incell",
-                pageable: true,
-                sortable: true,
-                navigatable: true,
-                resizable: true,
-                reorderable: true,
-                groupable: true,
-                filterable: true,
-                dataBound: onDataBound,
-                toolbar: ["excel", "pdf", "search"],
-                columns: [{
-                    field: "date",
-                    title: "Date",
-                    width: 150
-                }, {
-                    field: "state",
-                    title: "State",
-                    width: 150
-                }, {
-                    field: "positive",
-                    title: "Positive",
-                    width: 150,
-                }, {
-                    field: "negative",
-                    title: "Negative",
-                    width: 150
-                }, {
-                    field: "pending",
-                    title: "Pending",
-                    width: 150
-                }, {
-                    field: "totalTestResults",
-                    title: "Total Test Results",
-                    width: 150
-                }, {
-                    field: "hospitalizedCurrently",
-                    title: "Currently Hospitalized",
-                    width: 150
-                }, {
-                    field: "hospitalizedCumulative",
-                    title: "Total hospitalized to date",
-                    width: 150,
-                }, {
-                    field: "death",
-                    title: "Total deaths to date",
-                    width: 150
-                }],
-            });
-        });
+            </tr>
 
-        function onDataBound(e) {
-            var grid = this;
-            grid.table.find("tr").each(function () {
-                var dataItem = grid.dataItem(this);
-                kendo.bind($(this), dataItem);
-            });
-        }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.state)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.positive)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.negative)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.pending)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.totalTestResults)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.hospitalizedCurrently)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.hospitalizedCumulative)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.death)
+                    </td>
+                </tr>
+            }
 
-        function returnFalse() {
-            return false;
-        }
-
-    </script>
-</div>
+        </table>
+    </div>
+</div>  
