@@ -4,35 +4,135 @@
     ViewBag.Title = "Covid Data";
 }
 
-<div class="row">
-    
-    <div class="col-12">
+<script>
+    $(document).ready(function () {
+        var crudServiceBaseUrl = "https://api.covidtracking.com",
+            dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: crudServiceBaseUrl + "https://api.covidtracking.com/v1/states/daily.json",
+                        dataType: "json"
+                    }
+                },
+                batch: true,
+                pageSize: 20,
+                autoSync: true,
+                schema: {
+                    model: {
+                        id: "date",
+                        fields: {
+                            date: { type: "string", editable: false, nullable: true },
+                            state: { type: "string", editable: false },
+                            positive: { type: "int", editable: false },
+                            negative: { type: "number", editable: false },
+                            pending: { type: "number" },
+                            totalTestResults: { type: "number" },
+                            hospitalizedCurrently: { type: "number" },
+                            hospitalizedCumulative: { type: "number" },
+                            death: { type: "number" }
+                        }
+                    }
+                }
+            });
 
-        @(Html.Kendo().Grid<CovidTrackerApplication.Models.DailyDataRow>()
-            .Name("grid")
-            .Columns(columns =>
+        $("#grid").kendoGrid({
+            dataSource: dataSource,
+            columnMenu: {
+                filterable: false
+            },
+            height: 680,
+            editable: "incell",
+            pageable: true,
+            sortable: true,
+            navigatable: true,
+            resizable: true,
+            reorderable: true,
+            groupable: true,
+            filterable: true,
+            dataBound: onDataBound,
+            toolbar: ["excel", "pdf", "search"],
+            columns: [{
+                field: "date",
+                title: "Date",
+                width: 150
+            }, {
+                field: "state",
+                title: "State",
+                width: 150
+            }, {
+                field: "positive",
+                title: "Positive",
+                width: 150,
+            }, {
+                field: "negative",
+                title: "Negative",
+                width: 150
+            }, {
+                field: "pending",
+                title: "Pending",
+                width: 150
+            }, {
+                field: "totalTestResults",
+                title: "Total Test Results",
+                width: 150
+            }, {
+                field: "hospitalizedCurrently",
+                title: "Currently Hospitalized",
+                width: 150
+            }, {
+                field: "hospitalizedCumulative",
+                title: "Total hospitalized to date",
+                width: 150,
+            }, {
+                field: "death",
+                title: "Total deaths to date",
+                width: 150
+            }],
+        });
+    });
+
+    function onDataBound(e) {
+        var grid = this;
+        grid.table.find("tr").each(function () {
+            var dataItem = grid.dataItem(this);
+            kendo.bind($(this), dataItem);
+        });
+    }
+
+    function returnFalse() {
+        return false;
+    }
+
+</script>
+
+@(Html.Kendo().Grid<Kendo.Mvc.Examples.Models.ProductViewModel>()
+      .Name("grid")
+      .Columns(columns =>
+      {
+          columns.Bound(p => p.ProductName);
+          columns.Bound(p => p.UnitPrice).Width(150);
+          columns.Bound(p => p.UnitsInStock).Width(150);
+          columns.Bound(p => p.Discontinued).Width(150);
+          columns.Command(command => { command.Edit(); command.Destroy(); }).Width(200);
+      })
+      .ToolBar(tools =>
+      {
+          tools.Create();
+      })
+      .Sortable()
+      .Pageable()
+      .Filterable()
+      .DataSource(dataSource =>
+          dataSource
+            .WebApi()
+            .Model(model =>
             {
-                columns.Bound(p => p.Id).Filterable(false);
-                columns.Bound(p => p.date).Filterable(true);
-                columns.Bound(p => p.state).Filterable(true);
-                columns.Bound(p => p.positive);
-                columns.Bound(p => p.negative);
-                columns.Bound(p => p.pending);
-                columns.Bound(p => p.totalTestResults);
-                columns.Bound(p => p.hospitalizedCurrently);
-                columns.Bound(p => p.hospitalizedCumulative);
-                columns.Bound(p => p.death);
+                model.Id(p => p.ProductID);
             })
-            .Pageable()
-            .Sortable()
-            .Scrollable()
-            .Filterable()
-            .HtmlAttributes(new { style = "height:550px;" })
-            .DataSource(dataSource => dataSource
-                .Ajax()
-                .PageSize(20)
-                .Read(read => read.Action("Data_Read", "Grid"))
-            )
-        )
-    </div>
-</div>
+            .Events(events => events.Error("error_handler"))
+            .Read(read => read.Url(Url.HttpRouteUrl("DefaultApi", new { controller = "Product" })))
+            .Create(create => create.Url(Url.HttpRouteUrl("DefaultApi", new { controller = "Product" })))
+            .Update(update => update.Url(Url.HttpRouteUrl("DefaultApi", new { controller = "Product", id = "{0}" })))
+            .Destroy(destroy => destroy.Url(Url.HttpRouteUrl("DefaultApi", new { controller = "Product", id = "{0}" })))
+      )
+)

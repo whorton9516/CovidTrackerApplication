@@ -38,7 +38,7 @@ namespace CovidTrackerApplication.Models
         // Total death count
         public int? death { get; set; }
 
-        DailyDataRow()
+        public DailyDataRow()
         {
             positive = negative = pending =
                 totalTestResults = hospitalizedCurrently =

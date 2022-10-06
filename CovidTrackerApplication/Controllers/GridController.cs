@@ -29,7 +29,6 @@ namespace CovidTrackerApplication.Controllers
         {
 
             List<DailyDataRow> data = new List<DailyDataRow>();
-            var dataResponse = new object();
 
             using (var httpClient = new HttpClient())
             {
@@ -48,14 +47,14 @@ namespace CovidTrackerApplication.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     //Storing the response details recieved from web api   
-                    dataResponse = Res.Content.ReadAsStringAsync().Result;
+                    var dataResponse = Res.Content.ReadAsStringAsync().Result;
 
                     //Deserializing the response recieved from web api and storing into the Employee list  
-                    //data = JsonConvert.DeserializeObject<List<DailyDataRow>>(dataResponse);
+                    data = JsonConvert.DeserializeObject<List<DailyDataRow>>(dataResponse);
                 }
 
                 //returning the employee list to view  
-                return Json(dataResponse);
+                return View(data);
             }
         }
     }
