@@ -4,81 +4,116 @@
     ViewBag.Title = "Covid Data";
 }
 
-<div class="form-horizontal">
-    <hr />
-    <div class="form-group">
+@{ var id = 1; }
 
-        <table class="table table-responsive" style="width:400px">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Id)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.date)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.state)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.positive)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.negative)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.pending)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.totalTestResults)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.hospitalizedCurrently)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.hospitalizedCumulative)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.death)
-                </th>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="styles/kendo.default.min.css" />
+    <link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />
 
-            </tr>
+    <script src="js/jquery.min.js"></script>
 
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.date)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.state)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.positive)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.negative)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.pending)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.totalTestResults)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.hospitalizedCurrently)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.hospitalizedCumulative)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.death)
-                    </td>
-                </tr>
+    <script src="js/kendo.all.min.js"></script>
+</head>
+
+<div>
+    @(Html.Kendo().Grid<CovidTrackerApplication.Models.DailyDataRow>()
+        .Name("GridTable")
+        .Columns(columns => {
+            columns.Bound(p => p.date).Width(150);
+            columns.Bound(p => p.state).Width(150);
+            columns.Bound(p => p.positive).Width(150);
+            columns.Bound(p => p.negative).Width(150);
+            columns.Bound(p => p.pending).Width(150);
+            columns.Bound(p => p.totalTestResults).Width(150);
+            columns.Bound(p => p.hospitalizedCurrently).Width(150);
+            columns.Bound(p => p.hospitalizedCumulative).Width(150);
+            columns.Bound(p => p.death).Width(150);
+        })
+        .ToolBar(toolbar =>
+        {
+            toolbar.Excel();
+            toolbar.Pdf();
+            toolbar.Search();
+        })
+        .Pdf(pdf => pdf.ProxyURL(Url.Action("Excel_Export_Save", "Grid")))
+        .Excel(excel => excel.ProxyURL(Url.Action("Excel_Export_Save", "Grid")))
+        .Height(700)
+        .Pageable(pageable => pageable.ButtonCount(5))
+        .Sortable()
+        .Navigatable()
+        .Groupable(g=>g.ShowFooter(false))
+        .Filterable()
+        .Scrollable()
+        .Events(events => events.DataBound("onDataBound"))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Batch(true)
+            .PageSize(20)
+            .AutoSync(true)
+            .ServerOperation(false)
+            .Model(model => {
+                model.Id(p => p.date);
+                model.Field(p => p.date);
+                model.Field(p => p.state);
+                model.Field(p => p.positive);
+                model.Field(p => p.negative);
+                model.Field(p => p.pending);
+                model.Field(p => p.totalTestResults);
+                model.Field(p => p.hospitalizedCurrently);
+                model.Field(p => p.hospitalizedCumulative);
+                model.Field(p => p.death);
+            })
+            .Group(group => group.Add("Category.CategoryName", typeof(string), System.ComponentModel.ListSortDirection.Descending))
+            .Create("DetailProducts_Create", "Grid")
+            .Read("DetailProducts_Read", "Grid")
+            .Update("DetailProducts_Update", "Grid")
+            .Destroy("DetailProducts_Destroy", "Grid")
+         )
+    )
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+
+    <script type="text/javascript">
+        function error_handler(e) {
+            if (e.errors) {
+                var message = "Errors:\n";
+                $.each(e.errors, function (key, value) {
+                    if ('errors' in value) {
+                        $.each(value.errors, function () {
+                            message += this + "\n";
+                        });
+                    }
+                });
+                alert(message);
             }
+        }
 
-        </table>
-    </div>
-</div>  
+        function onDataBound(e) {
+            var grid = this;
+            grid.table.find("tr").each(function () {
+                var dataItem = grid.dataItem(this);
+                var themeColor = dataItem.Discontinued ? 'success' : 'error';
+                var text = dataItem.Discontinued ? 'available' : 'not available';
+
+                $(this).find('script').each(function () {
+                    eval($(this).html());
+                });
+
+                $(this).find(".badgeTemplate").kendoBadge({
+                    themeColor: themeColor,
+                    text: text,
+                });
+
+
+                kendo.bind($(this), dataItem);
+            });
+        }
+
+        function returnFalse() {
+            return false;
+        }
+    </script>
+
+    
+</div>
